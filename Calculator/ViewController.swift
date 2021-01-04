@@ -10,24 +10,29 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayLabel: UILabel!
     
     private var isFinishedTypingNumber: Bool = true
+    private var displayValue: Double {
+        get {
+            guard let number = Double(displayLabel.text!) else {
+                fatalError("Cannot convert display label text to a double")
+            }
+            return number
+        }
+        set {
+            displayLabel.text = toString(newValue)
+        }
+    }
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
-        
         //What should happen when a non-number button is pressed
         isFinishedTypingNumber = true
-        guard let number = Double(displayLabel.text!) else {
-            fatalError("Cannot convert display label text to a double")
-        }
-        
         if let calcMethod = sender.currentTitle {
             switch calcMethod {
             case "+/-":
-                displayLabel.text = String(number * -1)
+                displayValue *= -1
             case "AC":
-                displayLabel.text = "0"
+                displayValue = 0
             case "%":
-                displayLabel.text = String(number / 100.0)
-            
+                displayValue *= 0.01
             default:
                 fatalError("Calculation method not found")
             }
@@ -37,29 +42,31 @@ class ViewController: UIViewController {
     
     
     @IBAction func numButtonPressed(_ sender: UIButton) {
-        
         //What should happen when a number is entered into the keypad
-        if let numValue = sender.currentTitle {
+        if let numStr = sender.currentTitle {
             if isFinishedTypingNumber {
-                displayLabel.text = numValue
+                displayLabel.text = numStr
                 isFinishedTypingNumber = false
             } else {
-                if numValue == "." {
-                    
-                    guard let numValue = Double(displayLabel.text!) else {
-                        fatalError("Cannot convert display label text to a double")
-                    }
-                    let isInt = floor(numValue) == numValue
-                    if !isInt { // contains decimal point
-                        return // do not append the "." if it already is a double number
+                if numStr == "." {
+                    if !isInt(displayValue) {
+                        return // do not append the "." if it already contains decimal point
                     }
                 }
-                
-                
-                displayLabel.text = displayLabel.text! + numValue
+                displayLabel.text = displayLabel.text! + numStr
             }
         }
     }
     
+    private func isInt (_ num: Double) -> Bool {
+        return floor(num) == num
+    }
+    
+    private func toString (_ num: Double) -> String {
+        if isInt(num) {
+            return String(Int(num))
+        }
+        return String(num)
+    }
 }
 
