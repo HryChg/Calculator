@@ -9,6 +9,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var displayLabel: UILabel!
     
+    private var calculator = CalculatorLogic()
     private var isFinishedTypingNumber: Bool = true
     private var displayValue: Double {
         get {
@@ -26,18 +27,12 @@ class ViewController: UIViewController {
         //What should happen when a non-number button is pressed
         isFinishedTypingNumber = true
         if let calcMethod = sender.currentTitle {
-            switch calcMethod {
-            case "+/-":
-                displayValue *= -1
-            case "AC":
-                displayValue = 0
-            case "%":
-                displayValue *= 0.01
-            default:
-                fatalError("Calculation method not found")
+            calculator.setNumber(displayValue)
+            guard let result = calculator.calculate(symbol: calcMethod) else {
+                fatalError("The result of calculation is nil")
             }
+            displayValue = result
         }
-        
     }
     
     
