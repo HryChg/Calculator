@@ -1,6 +1,6 @@
 This is a simple calculator app built based on iOS tutotial.
 
-![demo](media/demo.gif)
+<img src="media/demo.gif" width="220" height="478">
 
 Technologies Involved:
 
