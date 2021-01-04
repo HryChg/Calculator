@@ -43,8 +43,9 @@ class ViewController: UIViewController {
                 isFinishedTypingNumber = false
             } else {
                 if numStr == "." {
-                    if !isInt(displayValue) {
-                        return // do not append the "." if it already contains decimal point
+                    // stop appending "." if there already exist one
+                    if displayLabel.text!.contains(".") {
+                        return
                     }
                 }
                 displayLabel.text = displayLabel.text! + numStr
